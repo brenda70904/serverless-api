@@ -17,16 +17,23 @@ exports.handler = async (event) => {
   console.log('path params', event.pathParameters);
 
 
+  const id = event?.pathParameters?.id
+
   const response = { statusCode: null, body: null };
 
-  console.log('event.body: ', event.body);
-
   try {
-    let results = await peopleModel.scan().exec();
-    console.log(results);
-    response.body = JSON.stringify(results);
-    response.statusCode = 200;
+    if (!id) {
+      let result = await peopleModel.scan().exec();
+      console.log(result);
+      response.body = JSON.stringify(result);
+      response.statusCode = 200;
+    } else {
+      let result = await peopleModel.get(id)
+      response.body = JSON.stringify(result);
+      response.statusCode = 200;
 
+
+    }
   } catch (e) {
     response.body = JSON.stringify(e.message);
     response.statusCode = 500;
